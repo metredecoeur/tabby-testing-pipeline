@@ -6,7 +6,7 @@ Thesis supervisor:
 dr. hab. inż. Robert Nowak, prof uczelni
 
 ## Diploma thesis contents
-Initial version of the work, based on the LaTeX template provided by the faculty lies in the **docs** directory. For the time being it consists of the title and the academic entities and the persons involved.
+Initial version of the work, based on the LaTeX template provided by the faculty lies in the **thesis** directory. For the time being it consists of the title and the academic entities and the persons involved.
 
 ## Setting up Tabby server
 Scripts with docker commands from the installation tutorial on [official Tabby page](https://tabby.tabbyml.com/docs/quick-start/installation/docker/) are to be found in the **tabby_local_server_setup** folder.
