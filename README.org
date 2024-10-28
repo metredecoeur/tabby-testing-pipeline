@@ -104,8 +104,7 @@ z    (make-lsp-client  :new-connection (lsp-stdio-connection '("npx" "tabby-agen
   - Smith-Waterman
 - Actual tools:
   - [[https://docs.python.org/3/library/difflib.html#difflib.SequenceMatcher][Pythons built-in difflib's SequenceMatcher]]
-  - [[https://github.com/jamesturk/jellyfish][Jellyfish python library implementing most of the metrics]]
-  - [[https://sourceforge.net/projects/simmetrics/][SimMetrics library implementing most of the metrics]]
+  - [[https://jamesturk.github.io/jellyfish/][Jellyfish python library implementing most of the metrics]]
   - [[https://stackoverflow.com/questions/17388213/find-the-similarity-metric-between-two-strings][More resources (stack overflow thread)]]
     
 **** Token-based
@@ -201,10 +200,12 @@ Code snippets are exactly the same with the only differences in white spaces
 **** Learning-based
 - Require large datasets of clean code, which may not be available for all languages
 - Approaches based on Random Forest among the most promising ones
-- [ ] Check methods from the initial paper 
+- [ ] Check methods from the initial paper
+- [[https://github.com/microsoft/CodeBERT][CodeBERT]] pre-trained model and its [[https://github.com/microsoft/CodeBERT/tree/master/GraphCodeBERT/clonedetection][clone code detection]] functionality
 
 **** Hybrid methods
 - Combine 2 or more from the previous methods
+- [[https://github.com/CGCL-codes/TreeCen][TreeCen detector]] - Tree Graph for scalable semantic detection (tree-based + learning-based method)
 
 **** Test-based methods
 - The *Black-box*-y approach
@@ -240,14 +241,28 @@ Code snippets are exactly the same with the only differences in white spaces
 - References from  /AI-driven Software Development Source Code Quality/ by BC. Petr Kantek
 
 
-
-
 * TODO Next Steps
 
-** TODO run some of the tools to test clone detection
-    
-** TODO get to know latex thesis structure
+** TODO Run some of the tools to test clone detection
 
-** TODO analyse vscode extension
+*** TODO Prepare data for testing
+- [ ] raw data in one data subdir
+- [ ] load raw algorithm
+- [ ] split it and send request with the prefix
+- [ ] concat prefix with the returned suggestion (what if multiple suggestions? tabby-agent does the initial processing and filtering, but still, a few can be received)
+- [ ] save to processed with an according name
+
+
+**** TODO Dividing ready algorithm into prefix and suffix
+- random 
+- every 10% or so
+- What about different Language Models that can be served along with Tabby? -> Apart from the apps infrastructure, latency etc, this is what actually gets tested
+  
+** TODO Propose Thesis structure based on the LaTeX template
+
+** TODO Analyse vscode extension
 [[https://github.com/TabbyML/tabby/tree/main/clients/vscode][Github repository with vscode extension]]
  
+** TODO What about quality asessing chat completions?
+Most likely not feasible, chat functionality should be implemented nonetheless.
+
