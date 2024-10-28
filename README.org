@@ -256,6 +256,7 @@ Code snippets are exactly the same with the only differences in white spaces
 **** TODO Dividing ready algorithm into prefix and suffix
 - random 
 - every 10% or so
+- including suffix as well eg. 10% from the start and 10% from the end of the snippet
 - What about different Language Models that can be served along with Tabby? -> Apart from the apps infrastructure, latency etc, this is what actually gets tested
   
 ** TODO Propose Thesis structure based on the LaTeX template
