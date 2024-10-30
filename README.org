@@ -255,11 +255,37 @@ Code snippets are exactly the same with the only differences in white spaces
 
 **** TODO Dividing ready algorithm into prefix and suffix
 - random 
-- every 10% or so
+- every 10% or so in a linear manner
+- non linear manner
+  - bigger chunk at first and then seeing how progressively smaller increments of the prefix change the resulting suggestion
+  - 10% of the initial function (depending on its length) may be just the function name
+    - if it is not a very descriptive one, then obviously the suggestion will not be the most accurate one
+    - algorithms, which are going to be the set for testing are quite a special case here
+      - given the algorithm's name it is quite easy to provide accurate suggestion, contrary to the case with some other custom user-defined function
+- Splitting according to the function's structure:
+  - name only
+  - whole header
+  - whole header + a docstring
+  - whole header + a docstring + optional return value as a suffix
 - including suffix as well eg. 10% from the start and 10% from the end of the snippet
 - What about different Language Models that can be served along with Tabby? -> Apart from the apps infrastructure, latency etc, this is what actually gets tested
   
 ** TODO Propose Thesis structure based on the LaTeX template
+- Introduction
+  - Overview of the topic of autocompletion tools:
+    - A bit of history, the rise of copilot and other tools that followed
+    - Rundown of both the proprietary and open source software options
+    - What led to the choice of Tabby
+- Tabby's suggestions quality assessment
+  - Overview of the possible approaches (test-based, string-based, etc)
+  - Description of the literary research proposing different methods for each one of the approaches (paper on code clone detection and its cross-references)
+  - Brief evaluation of all of the methods and the motives behind selecting a given combination
+  - Mention of the database/s used for the tests
+  - Overview of the testing process/pipeline, its results, analysis and main take aways
+- Description of the plugin's implementation and design
+- Evaluation of plugin's performance against eg:
+  - Other similar tools and the way they got integrated with emacs (codeium.el, copilot.el, gptel, ellama, both gptel and ellama serve a slightly different purpose though)
+  - Specifically Tabby's extension for other IDE's
 
 ** TODO Analyse vscode extension
 [[https://github.com/TabbyML/tabby/tree/main/clients/vscode][Github repository with vscode extension]]
