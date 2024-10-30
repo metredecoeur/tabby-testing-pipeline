@@ -1,3 +1,4 @@
+import json
 import os
 from pathlib import Path
 from dotenv import load_dotenv
@@ -10,6 +11,7 @@ from jellyfish import (
     jaro_similarity,
     jaro_winkler_similarity,
 )
+from typing import List
 
 import process_data
 import fetch_suggestions
@@ -18,14 +20,14 @@ import fetch_suggestions
 CWD = Path(__file__).parent
 RAW_DATA_DIR_PATH = os.path.join(CWD, "data/raw")
 PROCESSED_DATA_DIR_PATH = os.path.join(CWD, "data/processed")
+TABBY_SUGGESTIONS_DATA_DIR = os.path.join(CWD, "data/tabby-suggestions")
 
-RESULTS_FPATH = os.path.join(CWD, "combined_data.json")
 SPLIT_RATIO_STEP = 0.2
 
 STRING_BASED_SIMILARITY_ALGORITHMS = {
     SequenceMatcher.__name__: lambda og, replica: SequenceMatcher(
         isjunk=None, a=og, b=replica
-    ),
+    ).ratio(),
     levenshtein_distance.__name__: lambda og, replica: levenshtein_distance(
         og, replica
     ),
@@ -39,22 +41,31 @@ STRING_BASED_SIMILARITY_ALGORITHMS = {
     ),
 }
 
+def get_all_filenames_from_data_dir(dirpath: str) -> List[str]:
+    filenames = [fpath.name for fpath in Path(dirpath).iterdir() if fpath.is_file()]
+    return filenames
+
 
 def main():
     # prep env
     load_dotenv()
     tabby_auth_token = os.environ["tabby_auth_token"]
+    filenames = get_all_filenames_from_data_dir(RAW_DATA_DIR_PATH)
+    for fname in filenames:
+        testing_data = gen_algorithm_splits_and_test(fname, tabby_auth_token)
+        process_data.save_file(os.path.join(PROCESSED_DATA_DIR_PATH, f"tested-{fname}"), json.dumps(testing_data))
 
+def gen_algorithm_splits_and_test(raw_algorithm_fname, tabby_auth_token):
     # load algorithm
-    original_algorithm = process_data.load_file("bucket_sort.py")
+    raw_algorithm = process_data.load_file(os.path.join(RAW_DATA_DIR_PATH, raw_algorithm_fname))
 
     # split algorithm according to the ratio
     algorithm_splits = process_data.generate_split_prefixes_by_ratios(
         process_data.generate_split_ratios(SPLIT_RATIO_STEP),
-        original_algorithm,
+        raw_algorithm,
     )
     # prep json data from split ratios and prefixes
-    bucket_sort_data = {pair[0]: {"prefix": pair[1]} for pair in algorithm_splits}
+    bucket_sort_data = {str(pair[0]): {"prefix": pair[1]} for pair in algorithm_splits}
     # get suggestions for each one of the splits
     for ratio, prefix in algorithm_splits:
         suggestion = fetch_suggestions.get_suggestion(
@@ -65,18 +76,21 @@ def main():
             tabby_auth_token,
         )
         # combine prefixes with suggestions
-        for choice in suggestion["choices"]:
-            bucket_sort_data[ratio]["choices"] = {
-                choice["index"]: {"tabby_generated": prefix + choice["text"]}
-            }
+        bucket_sort_data[str(ratio)]["choices"] = []
 
-    # on each one of the matches for split ratio prefixes perform the string-based testing algorithms
-    for ratio, prefix in algorithm_splits:
-        for algorithm_name, algorithm in STRING_BASED_SIMILARITY_ALGORITHMS.items():
-            for choice in bucket_sort_data[ratio]["choices"]:
-                choice["index"][algorithm_name] = algorithm(
-                    original_algorithm, choice["index"]["tabby_generated"]
-                )
+        for idx, choice in enumerate(suggestion["choices"]):
+            tabby_completed_algorithm = prefix + choice["text"]
+            process_data.save_file(os.path.join(TABBY_SUGGESTIONS_DATA_DIR, f"tabby-gen-{idx}-{raw_algorithm_fname}"), tabby_completed_algorithm)
 
-    # save results from every testing algorithm to the respective split-ratios
-    process_data.save_file(RESULTS_FPATH, bucket_sort_data)
+            algorithms_test_results = {}
+            for algorithm_name, algorithm in STRING_BASED_SIMILARITY_ALGORITHMS.items():
+                result = algorithm(raw_algorithm, tabby_completed_algorithm)
+                algorithms_test_results[algorithm_name] = result
+
+            bucket_sort_data[str(ratio)]["choices"].append({tabby_completed_algorithm: algorithms_test_results})
+
+    return bucket_sort_data
+
+
+if __name__ == "__main__":
+    main()
