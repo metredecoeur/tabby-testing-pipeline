@@ -41,6 +41,7 @@ STRING_BASED_SIMILARITY_ALGORITHMS = {
     ),
 }
 
+
 def get_all_filenames_from_data_dir(dirpath: str) -> List[str]:
     filenames = [fpath.name for fpath in Path(dirpath).iterdir() if fpath.is_file()]
     return filenames
@@ -53,11 +54,17 @@ def main():
     filenames = get_all_filenames_from_data_dir(RAW_DATA_DIR_PATH)
     for fname in filenames:
         testing_data = gen_algorithm_splits_and_test(fname, tabby_auth_token)
-        process_data.save_file(os.path.join(PROCESSED_DATA_DIR_PATH, f"tested-{fname}"), json.dumps(testing_data))
+        process_data.save_file(
+            os.path.join(PROCESSED_DATA_DIR_PATH, f"tested-{fname.split('.')[0]}.json"),
+            json.dumps(testing_data),
+        )
+
 
 def gen_algorithm_splits_and_test(raw_algorithm_fname, tabby_auth_token):
     # load algorithm
-    raw_algorithm = process_data.load_file(os.path.join(RAW_DATA_DIR_PATH, raw_algorithm_fname))
+    raw_algorithm = process_data.load_file(
+        os.path.join(RAW_DATA_DIR_PATH, raw_algorithm_fname)
+    )
 
     # split algorithm according to the ratio
     algorithm_splits = process_data.generate_split_prefixes_by_ratios(
@@ -80,14 +87,21 @@ def gen_algorithm_splits_and_test(raw_algorithm_fname, tabby_auth_token):
 
         for idx, choice in enumerate(suggestion["choices"]):
             tabby_completed_algorithm = prefix + choice["text"]
-            process_data.save_file(os.path.join(TABBY_SUGGESTIONS_DATA_DIR, f"tabby-gen-{idx}-{raw_algorithm_fname}"), tabby_completed_algorithm)
+            process_data.save_file(
+                os.path.join(
+                    TABBY_SUGGESTIONS_DATA_DIR, f"tabby-gen-{idx}-{raw_algorithm_fname}"
+                ),
+                tabby_completed_algorithm,
+            )
 
             algorithms_test_results = {}
             for algorithm_name, algorithm in STRING_BASED_SIMILARITY_ALGORITHMS.items():
                 result = algorithm(raw_algorithm, tabby_completed_algorithm)
                 algorithms_test_results[algorithm_name] = result
 
-            bucket_sort_data[str(ratio)]["choices"].append({tabby_completed_algorithm: algorithms_test_results})
+            bucket_sort_data[str(ratio)]["choices"].append(
+                {tabby_completed_algorithm: algorithms_test_results}
+            )
 
     return bucket_sort_data
 
