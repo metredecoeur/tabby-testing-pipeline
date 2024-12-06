@@ -1,3 +1,4 @@
+
 * Emacs text editor package for integration with Tabby coding assistant
 
 ** Engineering thesis
@@ -5,87 +6,8 @@ Marta Borek\\
 318635\\
 Thesis supervisor: dr. hab. inż. Robert Nowak, prof uczelni
 
-** Diploma thesis contents
-Initial version of the work, based on the LaTeX template provided by the
-faculty lies in the *thesis* directory. For the time being it consists
-of the title and the academic entities and the persons involved.
-
 ** Setting up Tabby server
-Scripts with docker commands from the installation tutorial on
-[[https://tabby.tabbyml.com/docs/quick-start/installation/docker/][official
-Tabby page]] are to be found in the *tabby_local_server_setup* folder.
-For all of the steps it is best to check with the official guide, as the
-installation methods vary and it covers them all in detail, as well as
-the dependencies necessary for the CUDA option.
-
-** Open source AI coding assistants comparison
-Side by side comparison of a selection of other open source projects is
-to be found in *docs/open_source_AI_assistants_comparison.pdf* file.
-
-** Current research state and TODOs
-
-
-
-** Programme architecture and design
-
-*** Client-server
-
-**** 1-Tier Structure
-- User interface, business logic and data logic are all on one system.
-- Client and server are on the same system.
-- [ ] Check if applicable also to the situation where server is being locally hosted (docker etc), but most likely this is the right scenario.
-
-**** 2-Tier Structure
-- Two separate machines acting as server and client
-- Usually a desktop and a more powerful server
-- Typically user system interface located on the client and db management and services are on the more powerful server
-
-***** Fat Client-Thin Server
-Both application logic and user interface at client's end.
-
-***** Thin Client-Fat Server
-Both application logic and db management at server's end.
-
-*** Potential development to existing tabby-mode
-
-**** Automatic completion
-- Current version only supports manual completion upon executing tabby-complete function
-- For example:
-  - async process that gathers the necessary data for the request body after *n* miliseconds of idle time
-  - presents the first choice from the response
-    - preferably like in most IDE's using a grayed out text
-    - might also be a box of some sort, like with IntelliSense
-  - user can then
-    - cycle between different choices returned (if more than one) with a specified keybinding
-    - accept the current choice with another keybinding
-
-**** Chat Completion
-- New chat functionality to add
-
-
-*** Tabby-agent
-- Node.js package communicating with Tabby server
-- Developed as part of the VSCode extension
-- Implements:
-  - Debouncing (timing of requests sending)
-  - Caching (No need for additional duplicate server requests)
-  - Post-processing (picks a selection of best suggestions)
-[[https://tabby.tabbyml.com/blog/2024/02/05/create-tabby-extension-with-language-server-protocol/][tabby-agent Language Server Protocol]]
-[[https://github.com/TabbyML/tabby/tree/main/clients/tabby-agent][github tabby-agent documentation]]
-- *emacs* setup code snippet for /lsp-mode/ (github docs)
-  #+begin_src emacs-lisp
-(with-eval-after-load 'lsp-mode
-  (lsp-register-client
-z    (make-lsp-client  :new-connection (lsp-stdio-connection '("npx" "tabby-agent" "--stdio"))
-                      ;; you can select languages to enable Tabby language server
-                      :activation-fn (lsp-activate-on "typescript" "javascript" "toml")
-                      :priority 1
-                      :add-on? t
-                      :server-id 'tabby-agent)))
-  #+end_src
-- [ ] Research other Emacs LSP clients packages (Eglot, lsp-bridge, lspce)
-  
-**** TODO Analysis of VSCode and Vim plugins
+[[https://tabby.tabbyml.com/docs/welcome/][Link to Tabby's offical guide for installation and documentation]]
 
 * Quality measuring and testing
 
@@ -97,6 +19,10 @@ z    (make-lsp-client  :new-connection (lsp-stdio-connection '("npx" "tabby-agen
 - Also known as Distance-Based
 - Measure the minimum number of single-character operations (insertions, deletions, substitutions) required to transform one string into another.
 - The more, the greater the *distance* -> worse similarity
+- Best-suited for:
+  - spelling corrections
+  - shorter strings
+  - structured strings (forms, codes, names)
 - Examples (similarity metrics):
   - Hamming
   - Levenshtein
@@ -109,6 +35,9 @@ z    (make-lsp-client  :new-connection (lsp-stdio-connection '("npx" "tabby-agen
     
 **** Token-based
 - Comparison based on tokens instead of single characters
+- Best-suited for:
+  - document level similarity
+  - General semantic similarity in lonter texts
 - Examples:
   - Jaccard
   - Sorensen-Dice
@@ -117,10 +46,14 @@ z    (make-lsp-client  :new-connection (lsp-stdio-connection '("npx" "tabby-agen
 
 **** Sequence-based
 - Focused more on analyzing and comparing the entire sequence as opposed to token based algorithms where we compare tokens in the sequence
+- Best-suited for:
+  - identifying shared patterns
+  - text with structure order
 - Examples:
   - Ratcliff-Obershelp
     - [[https://github.com/ym001/distancia][Algorithm implementation in python /distancia/ package]]
   - Longest common substring/subsequence
+  - Jaro-Winkler similarity
 
 ** Code Functionality similarity comparison
 
@@ -178,9 +111,8 @@ Code snippets are exactly the same with the only differences in white spaces
 - Matching subtrees is computationally expensive
 - Accurate recognition of types I-III
 - Methods:
-  - /DECKARD/
+  - /DECKARD/ - *deprecated*, python2, not functional out of the box
     - [[https://github.com/skyhover/Deckard][Deckard Github repository]]
-    - Latest commits and changes 2018, so better promising
   - /Tekchandani/ (for type IV)
   - /TECCD/ tool with /word2vec/ algorithm (ANTLR parser generator)
     - [[https://tjusail.github.io/people/papers/TECCD-%20A%20Tree%20Embedding%20Approach%20for%20Code%20Clone%20Detection.pdf][paper on tree embedding approach for code clone detection]]
@@ -219,7 +151,7 @@ Code snippets are exactly the same with the only differences in white spaces
     - [[https://www.evosuite.org/][EvoSuite Java tool site]]
   - [[https://ieeexplore.ieee.org/document/8550632][Paper on Test-based clone detection]]
 
-**** Sumamry table of the methods
+**** Summary table of the methods
 +--------------------+------------+-------------+-------------+----------------+
 | feature/approach   | text-based | graph-based | token-based | learning-based |
 +--------------------+------------+-------------+-------------+----------------+
@@ -232,64 +164,5 @@ Code snippets are exactly the same with the only differences in white spaces
 | Algorithms/methods |            |             |             |                |
 +--------------------+------------+-------------+-------------+----------------+
 
-* Extending the (algorithm) codebase to use during quality testing
 
-- [[https://github.com/thealgorithms][github link to algorithms codebase]]
-  
-* Comparison with other tools
-
-- References from  /AI-driven Software Development Source Code Quality/ by BC. Petr Kantek
-
-
-* TODO Next Steps
-
-** TODO Run some of the tools to test clone detection
-
-*** TODO Prepare data for testing
-- [ ] raw data in one data subdir
-- [ ] load raw algorithm
-- [ ] split it and send request with the prefix
-- [ ] concat prefix with the returned suggestion (what if multiple suggestions? tabby-agent does the initial processing and filtering, but still, a few can be received)
-- [ ] save to processed with an according name
-
-
-**** TODO Dividing ready algorithm into prefix and suffix
-- random 
-- every 10% or so in a linear manner
-- non linear manner
-  - bigger chunk at first and then seeing how progressively smaller increments of the prefix change the resulting suggestion
-  - 10% of the initial function (depending on its length) may be just the function name
-    - if it is not a very descriptive one, then obviously the suggestion will not be the most accurate one
-    - algorithms, which are going to be the set for testing are quite a special case here
-      - given the algorithm's name it is quite easy to provide accurate suggestion, contrary to the case with some other custom user-defined function
-- Splitting according to the function's structure:
-  - name only
-  - whole header
-  - whole header + a docstring
-  - whole header + a docstring + optional return value as a suffix
-- including suffix as well eg. 10% from the start and 10% from the end of the snippet
-- What about different Language Models that can be served along with Tabby? -> Apart from the apps infrastructure, latency etc, this is what actually gets tested
-  
-** TODO Propose Thesis structure based on the LaTeX template
-- Introduction
-  - Overview of the topic of autocompletion tools:
-    - A bit of history, the rise of copilot and other tools that followed
-    - Rundown of both the proprietary and open source software options
-    - What led to the choice of Tabby
-- Tabby's suggestions quality assessment
-  - Overview of the possible approaches (test-based, string-based, etc)
-  - Description of the literary research proposing different methods for each one of the approaches (paper on code clone detection and its cross-references)
-  - Brief evaluation of all of the methods and the motives behind selecting a given combination
-  - Mention of the database/s used for the tests
-  - Overview of the testing process/pipeline, its results, analysis and main take aways
-- Description of the plugin's implementation and design
-- Evaluation of plugin's performance against eg:
-  - Other similar tools and the way they got integrated with emacs (codeium.el, copilot.el, gptel, ellama, both gptel and ellama serve a slightly different purpose though)
-  - Specifically Tabby's extension for other IDE's
-
-** TODO Analyse vscode extension
-[[https://github.com/TabbyML/tabby/tree/main/clients/vscode][Github repository with vscode extension]]
- 
-** TODO What about quality asessing chat completions?
-Most likely not feasible, chat functionality should be implemented nonetheless.
 
