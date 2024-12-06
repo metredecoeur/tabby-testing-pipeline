@@ -1,0 +1,12 @@
+[project]
+name = "tabby-quality-evaluation"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "jellyfish>=1.1.2",
+    "matplotlib>=3.9.3",
+    "pandas>=2.2.3",
+    "requests>=2.32.3",
+]
