@@ -2,8 +2,8 @@
 * Emacs text editor package for integration with Tabby coding assistant
 
 ** Engineering thesis
-Marta Borek\\
-318635\\
+Marta Borek  
+/318635/  
 Thesis supervisor: dr. hab. inż. Robert Nowak, prof uczelni
 
 ** Setting up Tabby server
@@ -150,19 +150,6 @@ Code snippets are exactly the same with the only differences in white spaces
     - Computationally expensive to generate test cases for different methods
     - [[https://www.evosuite.org/][EvoSuite Java tool site]]
   - [[https://ieeexplore.ieee.org/document/8550632][Paper on Test-based clone detection]]
-
-**** Summary table of the methods
-+--------------------+------------+-------------+-------------+----------------+
-| feature/approach   | text-based | graph-based | token-based | learning-based |
-+--------------------+------------+-------------+-------------+----------------+
-| Description        |            |             |             |                |  
-+--------------------+------------+-------------+-------------+----------------+
-| Pros               |            |             |             |                | 
-+--------------------+------------+-------------+-------------+----------------+
-| Cons               |            |             |             |                |
-+--------------------+------------+-------------+-------------+----------------+
-| Algorithms/methods |            |             |             |                |
-+--------------------+------------+-------------+-------------+----------------+
 
 
 
