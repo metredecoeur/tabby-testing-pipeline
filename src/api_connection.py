@@ -11,6 +11,7 @@ class TabbyConnection:
     """
     Connection to tabby server utilities
     """
+
     def __init__(self, url: str, auth_token: str):
         self._url = url
         self._auth_token = auth_token
@@ -28,7 +29,7 @@ class TabbyConnection:
         """
         retry_strategy = Retry(
             total=10,
-            backoff_factor=1,
+            backoff_factor=2,
             status_forcelist=[408, 500, 502, 503, 504],
         )
         adapter = HTTPAdapter(max_retries=retry_strategy)
@@ -61,12 +62,11 @@ class TabbyConnection:
             "segments": {
                 "prefix": prefix,
                 "suffix": suffix,
-                }
-            }
+            },
+        }
 
         return json.dumps(request_body)
 
-    
     def _send_post(self, post_data: str) -> dict:
         response = self._session.post(url=self._url, data=post_data, timeout=(60, 120))
         response.raise_for_status()
