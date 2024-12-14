@@ -4,8 +4,16 @@ from jellyfish import (
     hamming_distance,
     jaro_winkler_similarity,
 )
+from pathlib import Path
+
+ROOT_DIR = Path(__file__).resolve().parents[1]
+RAW_DATA_DIR = ROOT_DIR / "data/raw"
+PRE_SORTED_DATA_DIR = ROOT_DIR / "data/pre-sorted"
+TABBY_SUGGESTIONS_DATA_DIR = ROOT_DIR / "data/tabby-suggestions"
+
 
 TABBY_URL = "http://localhost:8080/v1/completions"
+REQUESTS_TIMEOUT = 30
 
 SIMILARITY_ALGORITHMS = {
     SequenceMatcher.__name__: lambda og, replica: SequenceMatcher(
