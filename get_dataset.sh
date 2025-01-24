@@ -4,7 +4,7 @@
 algorithms_download_url="https://github.com/TheAlgorithms/Python/archive/refs/heads/master.zip"
 CWD=$(pwd)
 data_dir="$CWD/data"
-db_target_path="$data_dir/pre-sorted"
+db_target_path="$data_dir/raw"
 
 target_db_dirs=(
     "data_structures"
