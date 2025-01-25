@@ -62,11 +62,12 @@ def plot_metrics(src_dir: Path):
     for fpath in next_file(src_dir):
         file_count += 1
         df = pd.read_csv(fpath, index_col=0)
+        og_values = df.loc["original"]
+        df.fillna(value=og_values, inplace=True)
         if avg_df is None:
             avg_df = df
         else:
             avg_df = avg_df.add(df, fill_value=0)
-    # original_values = df.loc["original"]
 
     avg_df = avg_df.divide(file_count)
     original_values = avg_df.loc["original"]
@@ -104,11 +105,11 @@ def main():
     sorted_dir = utils.get_data_dir() / "sorted"
     fragment_logs_dir = utils.get_data_dir() / "similarity_logs_fragment"
     full_logs_dir = utils.get_data_dir() / "similarity_logs_full"
-    # static_metrics_dir = utils.get_data_dir() / "static_metrics"
+    static_metrics_dir = utils.get_data_dir() / "static_metrics"
     # plot_algorithms(fragment_logs_dir, "fragment")
     # plot_algorithms(full_logs_dir, "full")
-    # plot_metrics(static_metrics_dir)
-    plot_len_ratios(full_logs_dir)
+    plot_metrics(static_metrics_dir)
+    # plot_len_ratios(full_logs_dir)
 
 
 if __name__ == "__main__":
