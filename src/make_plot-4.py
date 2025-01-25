@@ -16,8 +16,6 @@ def next_file(source_dir: Path) -> Path:
 def plot_algorithms(src_dir: Path, plot_suffix: str):
     for alg_name in list(const.SIMILARITY_ALGORITHMS.keys()):
         fig, axis = plt.subplots()
-        plt.ylabel("accuracy")
-        plt.xlabel("prefix percentage")
         for fpath in next_file(src_dir):
             df = pd.read_csv(fpath, index_col=0)
             df.plot(
@@ -39,8 +37,7 @@ def plot_algorithms(src_dir: Path, plot_suffix: str):
 
 def plot_len_ratios(src_dir: Path):
     fig, axis = plt.subplots()
-    plt.ylabel("length ratio")
-    plt.xlabel("prefix %")
+
     for fpath in next_file(src_dir):
         df = pd.read_csv(fpath, index_col=0)
         df.plot(
@@ -48,6 +45,8 @@ def plot_len_ratios(src_dir: Path):
             color=const.LEN_RATIO_COLOR,
             alpha=const.PLOT_COLORS_ALPHA,
             style="o",
+            xlabel="prefix %",
+            ylabel="length ratio",
             use_index=True,
             ax=axis,
             legend=False,
@@ -105,10 +104,10 @@ def main():
     sorted_dir = utils.get_data_dir() / "sorted"
     fragment_logs_dir = utils.get_data_dir() / "similarity_logs_fragment"
     full_logs_dir = utils.get_data_dir() / "similarity_logs_full"
-    static_metrics_dir = utils.get_data_dir() / "static_metrics"
-    plot_algorithms(fragment_logs_dir, "fragment")
-    plot_algorithms(full_logs_dir, "full")
-    plot_metrics(static_metrics_dir)
+    # static_metrics_dir = utils.get_data_dir() / "static_metrics"
+    # plot_algorithms(fragment_logs_dir, "fragment")
+    # plot_algorithms(full_logs_dir, "full")
+    # plot_metrics(static_metrics_dir)
     plot_len_ratios(full_logs_dir)
 
 
