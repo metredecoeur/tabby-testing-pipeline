@@ -1,4 +1,4 @@
-#+TITLE: Emacs text editor package for integration with Tabby coding assistant
+#+TITLE: Quality evaluation of Tabby coding assistant and Tabby integration with Emacs text editor
 #+AUTHOR: Marta Borek
 #+SUPERVISOR: dr. hab. inż. Robert Nowak, prof uczelni
 #+OPTIONS: toc:2 \n:t
@@ -10,52 +10,44 @@ Thesis supervisor: dr. hab. inż. Robert Nowak, prof uczelni
 Thesis topic: Emacs text editor package for integration with Tabby coding assistant
 
 ** Running
-*** Setting up Tabby server
+*** Tabby server setup
 1. [[https://tabby.tabbyml.com/docs/welcome/][Link to Tabby's offical guide for installation and documentation]]
 2. Tabby authorization token necessary to set in /.env/ file or as local environment variable during execution
 
-*** Run
-**** Recreate the virtual environment
+*** Recreate the virtual environment
 
-***** With uv
-uv [[https://docs.astral.sh/uv/getting-started/installation/][installation guide]]
-#+begin_src bash
-uv venv --project <project root>
-#+end_src
-
-***** Python virtual environment
 Alternatively:
 #+begin_src bash
-python venv .venv
+python -m venv .venv
 source .venv/bin/activate
 #+end_src
 
-**** Install dependencies
+*** Install dependencies
 #+begin_src bash
 python -m pip install -r requirements.txt
 #+end_src
    
-**** Run scripts
+*** Run scripts
 
-***** Get data
+**** Get data
 #+begin_src bash
 chmod +x get_dataset.sh
 ./get_dataset.sh
 #+end_src
-***** Sort data
+**** Sort data
 #+begin_src bash
 python src/sort_data-1.py
 #+end_src
-***** Query server
+**** Query server
 #+begin_src bash
 python src/query_server-2.py
 #+end_src
-***** Perform evaluation
+**** Perform evaluation
 #+begin_src bash
 python src/static_tester-3.py
 python src/similarity_tester-3.py
 #+end_src
-***** Visualize results
+**** Visualize results
 #+begin_src bash
 python src/make_plot-4.py
 #+end_src
@@ -66,7 +58,6 @@ Testing outcomes serve as the groundwork for analysis in the engineer's thesis t
 This project's outcomes support the motivation for Tabby's plugin implementation for Emacs and display the potential of the applied methodology. 
 
 *** Structure
-
 **** Data
 *data* directory holding intermittent samples and final outcomes is created with a help of /get_database.sh/ script, located at the root, which downloads a part of [[https://github.com/TheAlgorithms/Python][the Algorithms repository]], that is used as a benchmark codebase.
 
