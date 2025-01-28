@@ -16,7 +16,6 @@ Thesis topic: Emacs text editor package for integration with Tabby coding assist
 
 *** Recreate the virtual environment
 
-Alternatively:
 #+begin_src bash
 python -m venv .venv
 source .venv/bin/activate
@@ -66,7 +65,7 @@ This project's outcomes support the motivation for Tabby's plugin implementation
 *src* directory contains all scripts constituting the actual pipeline
 
 ***** Data preprocessing
-/sort_data-1.py/ discards files that do not match the file extension criteria and those that are empty, reconstructing sorted structure in *data/sorted*
+/sort_data-1.py/ discards files that do not match the file extension criteria and those that are empty, reconstructing sorted structure in *data/sorted*.
 
 ***** Completions retrieval 
 
@@ -91,7 +90,7 @@ Results are saved to *data/static_metrics*.
 - Jaro-Winkler similarity
 - Damerau-Levenshtein distance
 - Hamming distance
-The last three algorithms are implemented with the help of Python [[https://jamesturk.github.io/jellyfish/][jellyfish]] library.
+The last three algorithms are implemented with the help of Python [[https://jamesturk.github.io/jellyfish/][jellyfish]] library.  
 Similarity testing is performed in two ways:
 1. Whole files
    - Each original sample from *data/sorted* is compared with the Tabby-completed duplicate for each prefix.
