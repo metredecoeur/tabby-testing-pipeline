@@ -1,9 +1,9 @@
 [project]
 name = "tabby-quality-evaluation"
 version = "0.1.0"
-description = "Add your description here"
-readme = "README.md"
-requires-python = ">=3.12"
+description = "Utilities for testing the quality of Tabby coding assistant by employing static metrics and similarity algorithms"
+readme = "README.org"
+requires-python = "==3.12"
 dependencies = [
     "click>=8.1.7",
     "jellyfish>=1.1.2",
@@ -11,6 +11,5 @@ dependencies = [
     "pandas>=2.2.3",
     "python-dotenv>=1.0.1",
     "requests>=2.32.3",
-    "rich>=13.9.4",
     "tqdm>=4.67.1",
 ]
