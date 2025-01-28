@@ -88,7 +88,7 @@ def plot_metrics(src_dir: Path):
             x_vals,
             y_vals,
             "o-",
-            label="averge score",
+            label=f"duplicates",
             color=const.METRICS_PLOT_COLORS[metric],
         )
         axis.set_xlabel("prefix %")

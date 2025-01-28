@@ -7,10 +7,15 @@ from collections.abc import Generator
 from typing import Union
 from tqdm import tqdm
 from pathlib import Path
-import pandas as pd
+
 
 from utils import get_data_dir
 import const
+
+import warnings
+
+warnings.filterwarnings(action="ignore", category=FutureWarning)
+import pandas as pd
 
 
 class StaticTester:
@@ -183,7 +188,7 @@ class StaticTester:
             Union[tuple[float, float, float], None]: Metric score values,
             extracted from Radon's commands outputs
         """
-        hal_effort, hal_bugs, cc_complexity = 0, 0, 0
+        hal_effort, hal_bugs, cc_complexity = None, None, None
 
         cc_process = subprocess.run(
             args=[*self._complexity_command, fpath], capture_output=True, text=True
@@ -191,10 +196,6 @@ class StaticTester:
         if cc_process.returncode == 0:
             cc_output = cc_process.stdout
             cc_complexity = self._get_cc_complexity(cc_output)
-            if cc_complexity is None:
-                cc_complexity = 0
-        else:
-            cc_complexity = 0
 
         hal_process = subprocess.run(
             args=[*self._halstead_command, fpath], capture_output=True, text=True
@@ -202,12 +203,6 @@ class StaticTester:
         if hal_process.returncode == 0:
             hal_output = hal_process.stdout
             hal_effort, hal_bugs = self._get_halstead_effort_bugs(hal_output)
-            if hal_effort is None:
-                hal_effort = 0
-            if hal_bugs is None:
-                hal_bugs = 0
-        else:
-            hal_effort, hal_bugs = 0, 0
 
         return cc_complexity, hal_effort, hal_bugs
 
